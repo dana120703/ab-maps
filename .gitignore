@@ -7,10 +7,10 @@ node_modules/
 # Ignorer miljøfiler
 .env
 
-# Ignore
+# Ignorer
 .DS_Store
 Thumbs.db
 
-# Ignore
+# Ignorer
 build/
 dist/
