@@ -18,7 +18,10 @@ import LoadingIndicator from './components/ui/LoadingIndicator';
 import useMapState from './hooks/useMapState';
 
 // Services
-import { getAddressesInPolygon } from './services/apiService';
+import { getAddressesInPolygon, reverseGeocode } from './services/apiService';
+
+// Utils
+import { formatNorwegianAddress } from './utils/addressUtils';
 
 // Styles
 import './App.css';
@@ -163,6 +166,22 @@ function App() {
               color: area.properties.color, 
               fillColor: area.properties.color, 
               fillOpacity: 0.3 
+            }}
+            eventHandlers={{
+              click: async (e) => {
+                e.originalEvent.stopPropagation();
+                try {
+                  // Get addresses for this location using the same API service
+                  const data = await reverseGeocode(e.latlng);
+                  if (data.address) {
+                    const formattedAddress = formatNorwegianAddress(data.address);
+                    handleMapClick(e.latlng, [formattedAddress]);
+                  }
+                } catch (err) {
+                  console.error('Error looking up address in polygon:', err);
+                  handleMapClick(e.latlng, []);
+                }
+              }
             }}
           >
             <AreaPopup 
